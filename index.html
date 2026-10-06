@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mesa do Mundo — Catálogo de comidas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,560;9..144,700&family=Outfit:wght@360;480;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #24180f;
+      --muted: #6d5b4c;
+      --paper: #f6efe4;
+      --card: #fffaf4;
+      --line: #eadfce;
+      --terra: #c45c26;
+      --terra-deep: #8d3b14;
+      --leaf: #3f6b4a;
+      --gold: #e7b15a;
+      --shadow: 0 18px 40px rgba(70, 38, 12, 0.12);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: "Outfit", "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(1200px 500px at 10% -10%, #ffe7c4 0%, transparent 55%),
+        radial-gradient(900px 420px at 100% 0%, #f3d7c4 0%, transparent 50%),
+        var(--paper);
+      min-height: 100vh;
+    }
+    header {
+      padding: 28px 6vw 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: Fraunces, Georgia, serif;
+      font-size: 1.35rem;
+      letter-spacing: -0.03em;
+    }
+    .mark {
+      width: 42px; height: 42px; border-radius: 14px;
+      background: linear-gradient(145deg, #f0a15a, #c45c26);
+      display: grid; place-items: center; color: white; font-size: 1.3rem;
+      box-shadow: 0 8px 18px rgba(196, 92, 38, 0.28);
+    }
+    .count-pill {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 8px 14px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+    .hero {
+      padding: 18px 6vw 8px;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 28px;
+      align-items: end;
+    }
+    h1 {
+      font-family: Fraunces, Georgia, serif;
+      font-size: clamp(2.4rem, 5vw, 4.6rem);
+      line-height: 0.95;
+      margin: 0 0 14px;
+      letter-spacing: -0.04em;
+    }
+    h1 em { font-style: italic; color: var(--terra-deep); }
+    .lede { font-size: 1.12rem; color: var(--muted); max-width: 620px; margin: 0; }
+    .hero-note {
+      background: #2a1c13;
+      color: #f8efe4;
+      border-radius: 24px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+    }
+    .hero-note strong { display: block; font-family: Fraunces, serif; font-size: 1.35rem; margin-bottom: 6px; }
+    .controls {
+      padding: 22px 6vw 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+    input[type="search"] {
+      flex: 1 1 260px;
+      border: 1px solid var(--line);
+      background: white;
+      border-radius: 999px;
+      padding: 14px 18px;
+      font: inherit;
+      outline: none;
+    }
+    input[type="search"]:focus { border-color: #d7a06a; box-shadow: 0 0 0 4px rgba(228, 160, 90, 0.2); }
+    .filters { display: flex; flex-wrap: wrap; gap: 8px; }
+    button.chip {
+      border: 1px solid var(--line);
+      background: white;
+      border-radius: 999px;
+      padding: 10px 14px;
+      font: inherit;
+      cursor: pointer;
+      color: var(--ink);
+    }
+    button.chip.active {
+      background: var(--ink);
+      color: #fff8ef;
+      border-color: var(--ink);
+    }
+    main { padding: 12px 6vw 64px; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 18px;
+    }
+    article.card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: 0 10px 24px rgba(70, 38, 12, 0.06);
+      cursor: pointer;
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    article.card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+    .photo {
+      height: 180px;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+    .flag {
+      position: absolute;
+      left: 12px; top: 12px;
+      background: rgba(255,250,244,.92);
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 0.85rem;
+    }
+    .body { padding: 14px 16px 16px; }
+    .continent { color: var(--terra); font-size: 0.78rem; letter-spacing: .08em; text-transform: uppercase; font-weight: 600; }
+    h2 { margin: 4px 0 6px; font-family: Fraunces, serif; font-size: 1.45rem; letter-spacing: -0.03em; }
+    .country { color: var(--muted); margin: 0 0 8px; }
+    p.blurb { margin: 0; color: #4e4034; line-height: 1.45; }
+    .empty {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 48px 12px;
+      color: var(--muted);
+    }
+    dialog {
+      border: none;
+      border-radius: 28px;
+      padding: 0;
+      width: min(760px, calc(100% - 24px));
+      background: #fffaf4;
+      box-shadow: 0 30px 80px rgba(40, 20, 8, 0.28);
+    }
+    dialog::backdrop { background: rgba(30, 18, 8, 0.48); }
+    .modal-photo { height: 280px; background-size: cover; background-position: center; }
+    .modal-body { padding: 22px 24px 26px; }
+    .modal-body h3 { font-family: Fraunces, serif; font-size: 2rem; margin: 6px 0; }
+    .close {
+      position: absolute; right: 14px; top: 14px;
+      border: none; background: white; width: 40px; height: 40px;
+      border-radius: 50%; cursor: pointer; font-size: 1.2rem;
+    }
+    .facts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+    .fact { background: #f4eadc; border-radius: 16px; padding: 12px 14px; }
+    .fact span { display: block; font-size: 0.78rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+    footer { padding: 0 6vw 36px; color: var(--muted); font-size: 0.92rem; }
+    @media (max-width: 800px) {
+      .hero { grid-template-columns: 1fr; }
+      .facts { grid-template-columns: 1fr; }
+      .modal-photo { height: 200px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand"><span class="mark">🍲</span> Mesa do Mundo</div>
+    <div class="count-pill" id="count">24 pratos</div>
+  </header>
+  <section class="hero">
+    <div>
+      <h1>Um catálogo de <em>comidas</em> do mundo todo.</h1>
+      <p class="lede">Pratos famosos de cada canto do planeta: o que são, de onde vêm e o que costuma ir no prato. Busque pelo nome, pelo país ou filtre por continente.</p>
+    </div>
+    <div class="hero-note">
+      <strong>Como usar</strong>
+      Clique em um card para ver ingredientes e uma curiosidade. As fotos são ilustrações de estúdio dos pratos mais conhecidos.
+    </div>
+  </section>
+  <div class="controls">
+    <input id="q" type="search" placeholder="Buscar prato, país ou ingrediente..." />
+    <div class="filters" id="filters"></div>
+  </div>
+  <main>
+    <div class="grid" id="grid"></div>
+  </main>
+  <footer>Catálogo educativo de culinárias do mundo. Receitas variam de família para família.</footer>
+  <dialog id="modal">
+    <button class="close" id="close" aria-label="Fechar">×</button>
+    <div class="modal-photo" id="mphoto"></div>
+    <div class="modal-body">
+      <div class="continent" id="mcont"></div>
+      <h3 id="mtitle"></h3>
+      <p id="mcountry"></p>
+      <p id="mdesc"></p>
+      <div class="facts">
+        <div class="fact"><span>No prato</span><strong id="ming"></strong></div>
+        <div class="fact"><span>Curiosidade</span><strong id="mfact"></strong></div>
+      </div>
+    </div>
+  </dialog>
+  <script>
+    const dishes = [
+      { name: "Feijoada", country: "Brasil", flag: "🇧🇷", continent: "América", img: "imagine_images/X331F.jpg", color: "#6b3a24", blurb: "Ensopado de feijão-preto com carnes, servido com arroz, farofa e couve.", desc: "A feijoada é um dos pratos mais conhecidos do Brasil. O feijão-preto cozinha devagar com pedaços de carne de porco e linguiça. No prato, costuma vir com arroz branco, farofa, couve refogada e uma rodela de laranja.", ing: "Feijão-preto, linguiça, arroz, farofa, couve e laranja.", fact: "Em muitas cidades, a feijoada é o almoço de sábado." },
+      { name: "Pizza Margherita", country: "Itália", flag: "🇮🇹", continent: "Europa", img: "imagine_images/sLoWz.jpg", color: "#c4472f", blurb: "Massa assada com molho de tomate, mussarela e manjericão.", desc: "A Margherita nasceu em Nápoles e leva só o essencial: massa, tomate, queijo e folhas de manjericão. As cores lembram a bandeira da Itália.", ing: "Massa, tomate, mussarela e manjericão.", fact: "O nome homenageia a rainha Margherita de Saboia." },
+      { name: "Ramen", country: "Japão", flag: "🇯🇵", continent: "Ásia", img: "imagine_images/fQ2JV.jpg", color: "#8a5a32", blurb: "Macarrão em caldo quente, com ovo, alga e fatias de carne.", desc: "O ramen é uma tigela de macarrão em caldo. Cada região do Japão tem um estilo: mais salgado, mais rico ou mais leve. Por cima vão ovo, cebolinha, alga nori e carne.", ing: "Macarrão, caldo, ovo, nori, cebolinha e carne.", fact: "Existem milhares de lojas de ramen só no Japão." },
+      { name: "Tacos", country: "México", flag: "🇲🇽", continent: "América", img: "imagine_images/lEdIb.jpg", color: "#d07a2a", blurb: "Tortilhas de milho recheadas com carne, coentro, cebola e limão.", desc: "O taco mexicano clássico usa tortilha de milho, macia ou crocante, com carne grelhada, coentro, cebola e um pouco de limão. Os molhos ficam à parte, para cada um temperar do seu jeito.", ing: "Tortilha de milho, carne, coentro, cebola e limão.", fact: "O milho é a base de muitos pratos mexicanos há milhares de anos." },
+      { name: "Biryani", country: "Índia", flag: "🇮🇳", continent: "Ásia", img: "imagine_images/0Iyhx.jpg", color: "#c9892a", blurb: "Arroz perfumado com especiarias, ervas e frango.", desc: "O biryani é um arroz de festa. Grãos longos cozinham com especiarias, açafrão, ervas e frango ou legumes. O aroma é forte e a cor, dourada.", ing: "Arroz, frango, especiarias, coentro e açafrão.", fact: "Há versões diferentes em Hyderabad, Lucknow e no sul da Índia." },
+      { name: "Croissant", country: "França", flag: "🇫🇷", continent: "Europa", img: "imagine_images/TPmAq.jpg", color: "#d9a15a", blurb: "Massa folhada em formato de lua, crocante por fora e macia por dentro.", desc: "O croissant é o pão do café da manhã francês. A massa é dobrada várias vezes com manteiga, por isso fica em camadas. Por fora é dourado e crocante.", ing: "Farinha, manteiga, leite, fermento e um pouco de açúcar.", fact: "Um bom croissant deixa farelo na mesa quando você o parte." },
+      { name: "Jiaozi", country: "China", flag: "🇨🇳", continent: "Ásia", img: "imagine_images/dwPM1.jpg", color: "#e6d7c3", blurb: "Pastéis cozidos no vapor, recheados e servidos com molho.", desc: "Os jiaozi são dumplings chineses. A massinha envolve um recheio de legumes ou carne e vai ao vapor ou à água. No Ano-Novo chinês, famílias se reúnem para fechá-los juntas.", ing: "Massa de trigo, repolho, carne ou tofu e molho de soja.", fact: "O formato lembra antigas moedas de ouro, símbolo de boa sorte." },
+      { name: "Pad Thai", country: "Tailândia", flag: "🇹🇭", continent: "Ásia", img: "imagine_images/EtTwo.jpg", color: "#e38b45", blurb: "Macarrão de arroz salteado com camarão, amendoim e limão.", desc: "Pad thai é um macarrão de arroz frito na wok, agridoce, com ovo, broto de feijão, camarão ou tofu, amendoim e limão. É um dos pratos tailandeses mais pedidos no mundo.", ing: "Macarrão de arroz, ovo, camarão, amendoim e limão.", fact: "No século 20 virou um prato nacional incentivado nas ruas." },
+      { name: "Paella", country: "Espanha", flag: "🇪🇸", continent: "Europa", color: "#e2b04a", blurb: "Arroz com açafrão, frutos do mar e legumes, feito numa panela larga.", desc: "A paella nasceu na região de Valência. O arroz cozinha numa panela rasa e larga, ganhando cor do açafrão. Versões clássicas levam frango e coelho; as de praia levam camarão e mexilhão.", ing: "Arroz, açafrão, legumes e frutos do mar ou frango.", fact: "O fundo crocante do arroz tem nome: socarrat." },
+      { name: "Bibimbap", country: "Coreia do Sul", flag: "🇰🇷", continent: "Ásia", color: "#d4543c", blurb: "Tigela de arroz com legumes coloridos, ovo e molho picante.", desc: "Bibimbap significa arroz misturado. Os ingredientes ficam em montinhos coloridos por cima do arroz e, na hora de comer, tudo se mistura com um molho de pimenta suave.", ing: "Arroz, legumes, ovo, gergelim e gochujang.", fact: "As cores dos legumes representam equilíbrio na refeição." },
+      { name: "Salada grega", country: "Grécia", flag: "🇬🇷", continent: "Europa", color: "#3f7a56", blurb: "Tomate, pepino, azeitona, cebola e queijo feta.", desc: "A salada grega, ou horiatiki, é simples e fresca: tomate, pepino, cebola roxa, azeitonas e um bloco de queijo feta, com azeite e orégano. Não leva alface na versão tradicional.", ing: "Tomate, pepino, azeitona, cebola, feta e azeite.", fact: "É comida de verão nas ilhas do Mediterrâneo." },
+      { name: "Cuscuz", country: "Marrocos", flag: "🇲🇦", continent: "África", color: "#e0c27a", blurb: "Grãos de sêmola no vapor, com legumes e caldo.", desc: "O cuscuz marroquino é sêmola de trigo cozida no vapor, soltinha, servida com legumes, grão-de-bico e um ensopado. É prato de reunião, muitas vezes numa travessa grande no centro da mesa.", ing: "Sêmola, abobrinha, cenoura, grão-de-bico e caldo.", fact: "Cozinhar cuscuz no vapor deixa os grãos separados." },
+      { name: "Ceviche", country: "Peru", flag: "🇵🇪", continent: "América", color: "#7fbfc4", blurb: "Peixe fresco marinado em limão, com cebola roxa e milho.", desc: "No ceviche peruano, o peixe cru fica no suco de limão com cebola roxa, pimenta e coentro. O ácido do limão muda a textura do peixe. Ao lado, costuma vir milho e batata-doce.", ing: "Peixe branco, limão, cebola roxa, coentro e milho.", fact: "É um prato de costa, feito para ser comido na hora." },
+      { name: "Homus", country: "Líbano", flag: "🇱🇧", continent: "Ásia", color: "#d8c4a0", blurb: "Pasta cremosa de grão-de-bico, tahine e limão.", desc: "O homus é uma pasta de grão-de-bico batido com tahine, limão e alho. Fica aveludado e é comido com pão sírio. Um fio de azeite e um pouco de páprica terminam o prato.", ing: "Grão-de-bico, tahine, limão, alho e azeite.", fact: "É compartilhado em vários países do Mediterrâneo oriental." },
+      { name: "Baklava", country: "Turquia", flag: "🇹🇷", continent: "Ásia", color: "#c9843a", blurb: "Massa folhada com nozes e calda, em losangos dourados.", desc: "Baklava é uma sobremesa de camadas finas de massa, recheadas com pistache ou nozes e regadas com calda. Cada pedaço é crocante e doce, sem ser só açúcar.", ing: "Massa folhada, pistache ou nozes, manteiga e calda.", fact: "Cortar em losangos ajuda a calda a chegar em todas as camadas." },
+      { name: "Empanada", country: "Argentina", flag: "🇦🇷", continent: "América", color: "#c46a3a", blurb: "Pastel assado recheado com carne, azeitona e ovo.", desc: "A empanada argentina é um pastel de forno. O recheio clássico leva carne moída, cebola, azeitona e ovo cozido. Cada província tem um repolho de massa e um tempero próprio.", ing: "Massa, carne, cebola, azeitona e ovo.", fact: "O fechamento da borda, o repulgue, muda de sabor para sabor." },
+      { name: "Injera", country: "Etiópia", flag: "🇪🇹", continent: "África", color: "#b7a06a", blurb: "Pão esponjoso e azedinho, usado também como talher.", desc: "A injera é um pão largo e macio, feito de um grão chamado teff. Tem furinhos que seguram os molhos. Na Etiópia e na Eritreia, pedaços do próprio pão servem para pegar os ensopados.", ing: "Farinha de teff e água, fermentados.", fact: "Uma injera grande pode cobrir a travessa inteira." },
+      { name: "Hambúrguer", country: "Estados Unidos", flag: "🇺🇸", continent: "América", color: "#b55232", blurb: "Pão com hambúrguer grelhado, queijo, alface e tomate.", desc: "O hambúrguer virou símbolo da comida americana no século 20. Um disco de carne grelhada vai entre duas metades de pão, com queijo, alface, tomate e molho. Cada lanchonete inventa a sua versão.", ing: "Pão, carne, queijo, alface, tomate e molho.", fact: "O nome vem da cidade de Hamburgo, na Alemanha." },
+      { name: "Pretzel", country: "Alemanha", flag: "🇩🇪", continent: "Europa", color: "#c48a45", blurb: "Pão torcido, dourado e salgado por fora, macio por dentro.", desc: "O pretzel alemão tem o famoso nó e uma crosta brilhante, fruto de um banho rápido antes de assar. Por fora é salgado; por dentro, macio. Combina com mostarda.", ing: "Farinha, fermento, sal grosso e mostarda à parte.", fact: "O formato de laço é um símbolo antigo de padarias alemãs." },
+      { name: "Pho", country: "Vietnã", flag: "🇻🇳", continent: "Ásia", color: "#d8c3a5", blurb: "Sopa de macarrão de arroz em caldo perfumado com ervas.", desc: "O pho é uma sopa vietnamita de macarrão de arroz num caldo claro e perfumado, com carne, broto de feijão, hortelã, coentro e limão. Cada pessoa completa a tigela na mesa.", ing: "Macarrão de arroz, caldo, carne, hortelã e limão.", fact: "É comida de manhã, de almoço e de noite nas ruas de Hanói." },
+      { name: "Pastel de nata", country: "Portugal", flag: "🇵🇹", continent: "Europa", color: "#e6c27a", blurb: "Tortinha de massa crocante com creme de ovos queimadinho.", desc: "O pastel de nata é uma tortinha portuguesa de creme de ovos, com o topo levemente queimado. A versão mais famosa é a de Belém, em Lisboa, vendida quentinha.", ing: "Massa folhada, gemas, leite, açúcar e canela.", fact: "Nasceu em um mosteiro de Lisboa, no século 19." },
+      { name: "Jollof", country: "Nigéria", flag: "🇳🇬", continent: "África", color: "#d06a32", blurb: "Arroz tomateado, temperado e servido em festas.", desc: "O jollof rice é um arroz cozido em molho de tomate e pimentão, comum na África Ocidental. Na Nigéria, em Gana e no Senegal há versões rivais, todas motivo de orgulho.", ing: "Arroz, tomate, pimentão, cebola e especiarias.", fact: "É prato de festa, quase sempre feito em panela grande." },
+      { name: "Pavlova", country: "Austrália", flag: "🇦🇺", continent: "Oceania", color: "#f0e4ea", blurb: "Merengue crocante com chantilly e frutas frescas.", desc: "A pavlova é uma sobremesa de merengue: crocante por fora, macia por dentro, coberta de creme e frutas como maracujá, morango e kiwi. Austrália e Nova Zelândia disputam a origem.", ing: "Claras, açúcar, creme e frutas.", fact: "O nome homenageia a bailarina Anna Pavlova." },
+      { name: "Arepa", country: "Venezuela", flag: "🇻🇪", continent: "América", color: "#e2b85a", blurb: "Pãozinho redondo de milho, aberto e recheado.", desc: "A arepa é um pãozinho de massa de milho, grelhado ou frito, aberto ao meio. Na Venezuela vai recheada de queijo, feijão, carne ou abacate. Na Colômbia também é comida do dia a dia.", ing: "Farinha de milho, queijo e recheios variados.", fact: "O milho pré-cozido deixa a massa rápida de preparar." }
+    ];
+
+    const continents = ["Todos", ...new Set(dishes.map(d => d.continent))];
+    let current = "Todos";
+    const filters = document.getElementById("filters");
+    const grid = document.getElementById("grid");
+    const q = document.getElementById("q");
+    const count = document.getElementById("count");
+    const modal = document.getElementById("modal");
+
+    continents.forEach(c => {
+      const b = document.createElement("button");
+      b.className = "chip" + (c === "Todos" ? " active" : "");
+      b.textContent = c;
+      b.onclick = () => {
+        current = c;
+        document.querySelectorAll(".chip").forEach(x => x.classList.toggle("active", x.textContent === c));
+        render();
+      };
+      filters.appendChild(b);
+    });
+
+    function photoStyle(d) {
+      if (d.img) return `background-image:url('${d.img}')`;
+      return `background: linear-gradient(160deg, ${d.color}, #2a1c13 80%)`;
+    }
+
+    function render() {
+      const term = q.value.trim().toLowerCase();
+      const list = dishes.filter(d => {
+        const okC = current === "Todos" || d.continent === current;
+        const blob = (d.name + " " + d.country + " " + d.ing + " " + d.blurb).toLowerCase();
+        return okC && (!term || blob.includes(term));
+      });
+      count.textContent = list.length + (list.length === 1 ? " prato" : " pratos");
+      grid.innerHTML = list.length ? "" : `<div class="empty">Nenhum prato encontrado. Tente outro nome ou continente.</div>`;
+      list.forEach(d => {
+        const el = document.createElement("article");
+        el.className = "card";
+        el.innerHTML = `
+          <div class="photo" style="${photoStyle(d)}"><span class="flag">${d.flag} ${d.country}</span></div>
+          <div class="body">
+            <div class="continent">${d.continent}</div>
+            <h2>${d.name}</h2>
+            <p class="country">${d.country}</p>
+            <p class="blurb">${d.blurb}</p>
+          </div>`;
+        el.onclick = () => openDish(d);
+        grid.appendChild(el);
+      });
+    }
+
+    function openDish(d) {
+      document.getElementById("mphoto").style.cssText = photoStyle(d) + ";height:280px;background-size:cover;background-position:center";
+      document.getElementById("mcont").textContent = d.continent;
+      document.getElementById("mtitle").textContent = d.flag + " " + d.name;
+      document.getElementById("mcountry").textContent = d.country;
+      document.getElementById("mdesc").textContent = d.desc;
+      document.getElementById("ming").textContent = d.ing;
+      document.getElementById("mfact").textContent = d.fact;
+      modal.showModal();
+    }
+    document.getElementById("close").onclick = () => modal.close();
+    modal.addEventListener("click", e => { if (e.target === modal) modal.close(); });
+    q.addEventListener("input", render);
+    render();
+  </script>
+</body>
+</html>
